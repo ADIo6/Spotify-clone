@@ -12,7 +12,7 @@ async function getSongs() {
         const element = as[index];
         if(element.href.endsWith(".mp3"))
         {
-            songs.push(element.href)
+            songs.push(element.href.split("/songs/")[1])
         }
     }
     return songs;
@@ -22,8 +22,30 @@ async function main()
 {// get the list of all the songs
     let songs = await getSongs()
     console.log(songs);
+
+    let songUl = document.querySelector(".songList").getElementsByTagName("ul")[0];
+    for (const song of songs) {
+        songUl.innerHTML += `<li>
+                <img class="invert" src="music.svg" alt="">
+                <div class="info">
+                  <div class="songName"> ${song.replace(/%.{2}/g," ")}</div>
+                  <div>Adil</div>
+                </div>
+                <div class="playNow">
+                  <span>Play Now</span>
+                  <img class="invert" src="play.svg" alt="">
+                </div> 
+        </li>`;
+        
+    }
+
     // play the first song
     var audio = new Audio(songs[0])
-    audio.play();
+    // audio.play();
+
+    audio.addEventListener("loadeddata", ()=>{
+        let duration = audio.duration;
+        console.log(audio.duration, audio.currentSrc, audio.currentTime)
+    })
 }
 main()
